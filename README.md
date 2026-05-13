@@ -2,7 +2,7 @@
 
 ## 代码备注
 - xingxituan.py是论文一附录J的代码。
-- bullet01.py是论文一子弹星系团纯理论推演的验证代码，之后用观测数据拟合记得命名顺延编号。
+- bullet01.py是论文一子弹星系团纯理论推演的验证代码，目前已经被新版bullet01a.py代替。
   - bullet01a.py是补充了气体团等具体贡献的代码版本。
   - bullet_newton_only01.py是只计算牛顿项贡献的版本。
 - habo001.py是附篇使用Cosmicflows-4数据验证低红移下哈勃参数与质量密度也呈负相关预言的代码。使用文件是table3.bat，来源https://cdsarc.cds.unistra.fr/ftp/J/ApJ/944/94/
