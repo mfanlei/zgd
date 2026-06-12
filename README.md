@@ -22,6 +22,9 @@
 ### 近场哈勃常数检验（附篇）
 - 【habo01.py】 — 利用 Cosmicflows-4 星系群数据，逐天区测量局部哈勃常数，检验与物质密度的负相关性。使用文件是table3.bat，来源https://cdsarc.cds.unistra.fr/ftp/J/ApJ/944/94/
 
+### 信息宇宙极限半径计算（论文二 §5）
+- 【rmax.py】 — 求解 ZGD 联立方程 $H(z) = 1/(T_{\text{now}} - \tau(z))$，通过 Picard 迭代和共形时间积分计算理论粒子视界半径 $R_p^{\text{theory}}$ 及信息饱和半径 $R_{\text{max}}$，输出信息熵 $I_{\text{obs}}$、$S_{\text{info}}$ 及差值 $\Delta$
+
 所有代码依赖标准科学计算库（NumPy、SciPy、Matplotlib 等），运行方式为 `python <文件名>.py`。
 
 ## 几个可供分享的物理图景
