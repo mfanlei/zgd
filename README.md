@@ -7,6 +7,7 @@
 ### 历史代码
 - 【xingxituan.py】 — 原论文一附录J的代码。
 - 【bullet01.py】 — 论文一子弹星系团纯理论推演的验证代码，目前已经被新版bullet01a.py代替。
+- 【rmax.py】 — 信息宇宙极限半径计算（原论文二 §5）。求解 ZGD 联立方程 $H(z) = 1/(T_{\text{now}} - \tau(z))$，通过 Picard 迭代和共形时间积分计算理论粒子视界半径 $R_p^{\text{theory}}$ 及信息饱和半径 $R_{\text{max}}$，输出信息熵 $I_{\text{obs}}$、$S_{\text{info}}$ 及差值 $\Delta$
 
 ### 并合星系团验证（论文一 §3.1–§3.2）
 - 【bullet01a.py】 — 双 β 模型 ZGD 有效引力场计算，输出透镜峰偏移量、物理根源验证数据及可视化图表，是【bullet01.py】补充了气体团等具体贡献的代码版本。
@@ -21,9 +22,6 @@
 
 ### 近场哈勃常数检验（附篇）
 - 【habo01.py】 — 利用 Cosmicflows-4 星系群数据，逐天区测量局部哈勃常数，检验与物质密度的负相关性。使用文件是table3.bat，来源https://cdsarc.cds.unistra.fr/ftp/J/ApJ/944/94/
-
-### 信息宇宙极限半径计算（论文二 §5）
-- 【rmax.py】 — 求解 ZGD 联立方程 $H(z) = 1/(T_{\text{now}} - \tau(z))$，通过 Picard 迭代和共形时间积分计算理论粒子视界半径 $R_p^{\text{theory}}$ 及信息饱和半径 $R_{\text{max}}$，输出信息熵 $I_{\text{obs}}$、$S_{\text{info}}$ 及差值 $\Delta$
 
 所有代码依赖标准科学计算库（NumPy、SciPy、Matplotlib 等），运行方式为 `python <文件名>.py`。
 
