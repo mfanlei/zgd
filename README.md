@@ -22,7 +22,10 @@
 
 ### DESI数据拟合（论文一）
 - 【step1.py】、【step2.py】、【step3.py】、【step4.py】 — 论文一双幂律拟合
-- 【caijue.py】 — 复现脚本
+- 【caijue.py】 — 用于复现论文一（Z-几何动力学）宇宙学部分对 DESI DR2 BAO 数据的全部关键数值
+  **需要与以下官方 DESI DR2 BAO 数据文件放在同一目录**：
+  desi_gaussian_bao_ALL_GCcomb_mean.txt
+  desi_gaussian_bao_ALL_GCcomb_cov.txt
 
 ### 近场哈勃常数检验（附篇）
 - 【habo01.py】 — 利用 Cosmicflows-4 星系群数据，逐天区测量局部哈勃常数，检验与物质密度的负相关性。使用文件是table3.bat，来源https://cdsarc.cds.unistra.fr/ftp/J/ApJ/944/94/
