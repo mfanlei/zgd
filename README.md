@@ -20,8 +20,9 @@
 - 【lens01a.py】 — 纯牛顿项 + 有效质光比 0.51，检验质量校准后牛顿项是否与观测一致
 - 【lens01b.py】 — ZGD 完整公式 + 有效质光比 0.51，检验点质量近似在透镜内区的高估效应
 
-### 引力透镜验证（论文一 §4.5）
+### DESI数据拟合（论文一）
 - 【step1.py】、【step2.py】、【step3.py】、【step4.py】 — 论文一双幂律拟合
+- 【caijue.py】 — 复现脚本
 
 ### 近场哈勃常数检验（附篇）
 - 【habo01.py】 — 利用 Cosmicflows-4 星系群数据，逐天区测量局部哈勃常数，检验与物质密度的负相关性。使用文件是table3.bat，来源https://cdsarc.cds.unistra.fr/ftp/J/ApJ/944/94/
