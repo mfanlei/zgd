@@ -26,9 +26,13 @@ datafile = 'MassModels_Lelli2016c.mrt.txt'
 if not os.path.exists(datafile):
     raise FileNotFoundError(datafile)
 
-DF = pd.read_csv(datafile, sep=r'\s+', skiprows=37, header=None,
+DF = pd.read_csv(datafile, sep=r'\s+', skiprows=25, header=None,
                  names=['ID','D','R','Vobs','e_Vobs','Vgas','Vdisk','Vbul','SBdisk','SBbul'])
 DF = DF.dropna(subset=['ID'])
+
+# 加上断言，确保解析无误
+assert DF['ID'].iloc[0] == 'CamB', "第一行不是 CamB，表头行数不对！"
+assert DF['ID'].nunique() == 175, f"星系数不对，只有 {DF['ID'].nunique()} 个！"
 
 print("="*80)
 print("SPARC ZGD 最终验证 — 渐近极限与上确界检验")
