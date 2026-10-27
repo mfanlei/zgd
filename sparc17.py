@@ -16,8 +16,12 @@ ML_DISK, ML_BUL = 0.5, 0.7
 A0_ZGD = C_LIGHT**2 / RP
 A_B_RAR = 1.20e-10
 
-DF = pd.read_csv('MassModels_Lelli2016c.mrt.txt', sep=r'\s+', skiprows=37, header=None,
+DF = pd.read_csv('MassModels_Lelli2016c.mrt.txt', sep=r'\s+', skiprows=25, header=None,
                  names=['ID','D','R','Vobs','e_Vobs','Vgas','Vdisk','Vbul','SBdisk','SBbul']).dropna(subset=['ID'])
+
+# 加上断言，确保解析无误
+assert DF['ID'].iloc[0] == 'CamB', "第一行不是 CamB，表头行数不对！"
+assert DF['ID'].nunique() == 175, f"星系数不对，只有 {DF['ID'].nunique()} 个！"
 
 vgas = np.sqrt(GAS_HE_FACTOR) * DF['Vgas']
 vdisk = np.sqrt(ML_DISK) * DF['Vdisk']
@@ -161,3 +165,23 @@ for ax, gal, title in [(axes[0], gal_flat, f'A: flat subsample (N={len(gal_flat)
     ax.set_title(title); ax.legend(frameon=False, fontsize=8); ax.grid(alpha=0.3)
 plt.tight_layout(); plt.savefig('sparc_C_plane_final.png', dpi=200); plt.close()
 print("\n图已保存：sparc_C_plane_final.png")
+
+# ==================== 最终输出确认 ====================
+print("\n" + "="*50)
+print("【最终数据确认】")
+print(f"q 中位数: {gal_pos['q'].median():.3f}")
+print(f"g 中位数: {gal_pos['g'].median():.3f}")
+
+# 计算两端论证的锚点 (深端平台和加性模型拟合值)
+# 这里直接拟合加性模型 C = q + g，得出 g 的拟合值
+from scipy.optimize import curve_fit
+def linear_model(q, g_val): return q + g_val
+popt, _ = curve_fit(linear_model, gal_pos['q'], gal_pos['C'])
+print(f"加性 ansatz 拟合 g 值: {popt[0]:.3f}")
+
+# 计算 C_deep (q < 0.2 的中位数)
+C_deep = gal_pos[gal_pos['q'] < 0.2]['C'].median()
+C_deep_lo = gal_pos[gal_pos['q'] < 0.2]['C'].quantile(0.16)
+C_deep_hi = gal_pos[gal_pos['q'] < 0.2]['C'].quantile(0.84)
+print(f"C_deep (q<0.2 中位数): {C_deep:.3f} [{C_deep_lo:.3f}, {C_deep_hi:.3f}]")
+print("="*50)
