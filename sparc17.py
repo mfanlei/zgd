@@ -185,3 +185,17 @@ C_deep_lo = gal_pos[gal_pos['q'] < 0.2]['C'].quantile(0.16)
 C_deep_hi = gal_pos[gal_pos['q'] < 0.2]['C'].quantile(0.84)
 print(f"C_deep (q<0.2 中位数): {C_deep:.3f} [{C_deep_lo:.3f}, {C_deep_hi:.3f}]")
 print("="*50)
+
+# ==================== 补充硬伤验证 ====================
+print("\n" + "="*50)
+print("【补充验证】")
+# 1. bin1 (q<0.1) 的精确中位数与标准差
+bin1 = gal_pos[(gal_pos['q'] >= 0.0) & (gal_pos['q'] < 0.1)]['C']
+print(f"bin1 (q<0.1) 中位数: {bin1.median():.3f}, 标准差: {bin1.std():.3f}, N={len(bin1)}")
+
+# 2. C_deep 的精确 CI
+c_deep_sub = gal_pos[gal_pos['q'] < 0.2]['C']
+print(f"C_deep 中位数: {c_deep_sub.median():.3f}, IQR: [{c_deep_sub.quantile(0.16):.3f}, {c_deep_sub.quantile(0.84):.3f}]")
+
+# 3. g>1 的确切数量
+print(f"g>1 的星系数: {(gal_pos['g'] > 1).sum()}")
