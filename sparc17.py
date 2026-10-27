@@ -140,7 +140,7 @@ def C_full_RAR(q):
 q_grid = np.linspace(0.01, 0.5, 200)
 C_pure = np.full_like(q_grid, np.sqrt(A_B_RAR / A0_ZGD))
 C_rar_full = C_full_RAR(q_grid)
-C_add = q_grid + 0.567
+C_add = q_grid + 0.593
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
 for ax, gal, title in [(axes[0], gal_flat, f'A: flat subsample (N={len(gal_flat)})'),
@@ -159,8 +159,8 @@ for ax, gal, title in [(axes[0], gal_flat, f'A: flat subsample (N={len(gal_flat)
                 fmt='o', capsize=4, color='tab:blue', label='Observed C (bootstrap 68%)')
     ax.plot(q_grid, C_pure, 'b--', lw=1.8, label=f'Pure sqrt RAR (a_B=1.20)')
     ax.plot(q_grid, C_rar_full, 'b-', lw=2, label='Full RAR (standard-ν)')
-    ax.plot(q_grid, C_add, 'g:', lw=2, label='Additive ansatz (g=0.567)')
-    ax.axhline(0.77, color='r', lw=1.5, alpha=0.6, label='Deep-MOND C ≈ 0.77')
+    ax.plot(q_grid, C_add, 'g:', lw=2, label='Additive ansatz (g=0.593)')
+    ax.axhline(0.740, color='r', lw=1.5, alpha=0.6, label='Deep-MOND C ≈ 0.74')
     ax.set_xlabel('q'); ax.set_ylabel('C = V_obs²/V_geo²')
     ax.set_title(title); ax.legend(frameon=False, fontsize=8); ax.grid(alpha=0.3)
 plt.tight_layout(); plt.savefig('sparc_C_plane_final.png', dpi=200); plt.close()
