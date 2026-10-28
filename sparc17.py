@@ -143,7 +143,7 @@ C_rar_full = C_full_RAR(q_grid)
 C_add = q_grid + 0.593
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 5.5))
-for ax, gal, title in [(axes[0], gal_flat, f'A: flat subsample (N={len(gal_flat)})'),
+for ax, gal, title in [(axes[0], gal_flat, f'A: well-developed RC subsample (N={len(gal_flat)})'),
                         (axes[1], gal_pos, f'B: full g>0 sample (N={len(gal_pos)})')]:
     binned = gal.copy()
     binned['qb'] = pd.cut(binned['q'], bins)
