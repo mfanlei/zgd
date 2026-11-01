@@ -188,3 +188,25 @@ plt.tight_layout()
 plt.savefig('c_q_verification.png', dpi=200)
 plt.close()
 print("\n图已保存：c_q_verification.png (图内文字已统一为英文，无乱码)")
+
+# ==================== 追加：环境梯度显著性的 Mann-Whitney 检验 ====================
+from scipy.stats import mannwhitneyu
+
+print("\n" + "="*70)
+print("【Mann-Whitney 检验：q<0.1 深端矮星系 vs q>0.1 盘星系】")
+print("="*70)
+
+gal = gal_outer5.copy()
+deep = gal[gal['q'] < 0.1]['C_true']  # 深端 g 值
+main = gal[gal['q'] > 0.1]['C_true']  # 盘星系 g 值
+
+print(f"深端 (q<0.1) N={len(deep)}, 中位 g={deep.median():.3f}")
+print(f"主样本 (q>0.1) N={len(main)}, 中位 g={main.median():.3f}")
+
+stat, p = mannwhitneyu(deep, main, alternative='two-sided')
+print(f"Mann-Whitney U={stat:.1f}, p-value={p:.3e}")
+if p < 0.05:
+    print("结论：存在统计学显著差异（p < 0.05）。")
+else:
+    print("结论：差异不显著（p > 0.05），只能称为提示性趋势。")
+print("="*70)
