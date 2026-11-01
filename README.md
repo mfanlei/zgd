@@ -10,13 +10,13 @@
 *   **`bullet_newton_only01.py`** — 纯牛顿对照组，关闭几何修正项，用于量化其独立贡献。
 
 ### 2. 星系旋转曲线验证（论文一 §4.2–§4.7）
-
-*   **`sparc09.py`** — 读取 SPARC 质量模型，计算渐近探针偏移，检验点质量上界定理（\(\eta\) 中位数 0.528），并生成 L 型断层图（`sparc_zgd_validation.png`、`sparc_delta_overestimation.png`）。
-*   **`c_q_verification.py`** — **核心脚本**。执行 \(C_{\text{ours}}\)、纯几何重整标度 \(g\) 以及 RAR 精确插值的代数分离对比。生成 `c_q_verification.png`，论证 \(C_{\text{ours}} = q + g\) 的代数假象，并展示 \(g\) 的环境依赖梯度行为（深端孤立矮星系回升至 0.66，盘星系稀释至 0.58）。
+*   **`sparc09.py`** — 读取 SPARC 质量模型，计算渐近探针的整体偏移量（+12.5%），并生成速度散点图与直方图（`sparc_zgd_validation.png`）。*（注：此脚本同时也输出了未扣除重子项的纯速度比值违反数 30/175，作为早期探索。论文中严格的上界定理检验以 `sparc17.py` 为准。）*
+*   **`sparc17.py`** — 严格的上界定理操作化检验脚本。扣除了重子项（\(V_{\text{bar}}\)），计算残余几何场代理 \(\eta\)，输出最终的 10/175 违反数。同时生成点质量高估量的 L 型断层图（`sparc_delta_overestimation.png`）。
+*   **`c_q_verification.py`** — **核心脚本**。执行 \(C_{\text{ours}}\)、纯几何重整标度 \(g\) 以及 RAR 精确插值的代数分离对比。生成 `c_q_verification.png`，论证 \(C_{\text{ours}} = q + g\) 的代数假象，并展示 \(g\) 的环境依赖提示性梯度（深端 0.66，盘星系 0.58）。
 
 ### 3. 星系团核心引力透镜（论文一 §4.8 与附录 B）
-
-*   **`bcgicm.py`** — 构建双成分质量模型（BCG 用 Hernquist，ICM 用 \(\beta\) 模型），执行 BCG/ICM 质量比扫描。生成 `lensing_mass_ratio_scan.png`，展示在特定质量比区间（\(\sim 1.4-1.9\)）内几何项可有效填补透镜缺口。
+*   **`bcgicm.py`** — 构建双成分质量模型（BCG 用 Hernquist，ICM 用 \(\beta\) 模型），执行 BCG/ICM 质量比扫描，生成 `lensing_mass_ratio_scan.png`。
+*   **`bcgicm_fbar_scan.py`** — 针对不同重子分数（\(f_{\text{bar}} = 0.05, 0.10, 0.20\)）进行多线扫描。结果表明，真实富团核心（\(f_{\text{bar}} \sim 0.05\)）在质量比 \(\sim 0.03\) 处能够完美填补透镜缺口（填补率 \(\sim 1.0\)）。生成 `lensing_fbar_scan.png`。
 
 ### 4. 非线性场方程三维正演（论文一 附录 C）
 
