@@ -15,8 +15,8 @@
 *   **`c_q_verification.py`** — **核心脚本**。执行 \(C_{\text{ours}}\)、纯几何重整标度 \(g\) 以及 RAR 精确插值的代数分离对比。生成 `c_q_verification.png`，论证 \(C_{\text{ours}} = q + g\) 的代数假象，并展示 \(g\) 的环境依赖提示性梯度（深端 0.66，盘星系 0.58）。
 
 ### 3. 星系团核心引力透镜（论文一 §4.8 与附录 B）
-*   **`bcgicm.py`** — 构建双成分质量模型（BCG 用 Hernquist，ICM 用 \(\beta\) 模型），执行 BCG/ICM 质量比扫描，生成 `lensing_mass_ratio_scan.png`。
-*   **`bcgicm_fbar_scan.py`** — 针对不同重子分数（\(f_{\text{bar}} = 0.05, 0.10, 0.20\)）进行多线扫描。结果表明，真实富团核心（\(f_{\text{bar}} \sim 0.05\)）在质量比 \(\sim 0.03\) 处能够完美填补透镜缺口（填补率 \(\sim 1.0\)）。生成 `lensing_fbar_scan.png`。
+*   **`bcgicm.py`** — 基准模型。固定 \(f_{\text{bar}} = 0.20\)，扫描 BCG/ICM 质量比，生成 `lensing_mass_ratio_scan.png`。
+*   **`bcgicm_fbar_scan.py`** — 扩展模型。扫描 \((f_{\text{bar}}, M_{\text{BCG}}/M_{\text{ICM}})\) 二维网格，输出附录表 `tab:fbar_scan` 的全部数值，并生成 `lensing_fbar_scan.png`。**这是正文 §4.8“真实富团核心（\(f_{\text{bar}} \sim 0.05\)）填补约 1.16 倍”这一结论的直接代码来源。**
 
 ### 4. 非线性场方程三维正演（论文一 附录 C）
 
