@@ -27,7 +27,8 @@
 *   **`step1.py` — `step4.py`** — 论文一的双幂律唯象拟合。
 *   **`caijue.py`** — 用于复现论文一宇宙学部分对 DESI DR2 BAO 数据的全部关键数值。
     *   **注意**：需与官方数据文件 `desi_gaussian_bao_ALL_GCcomb_mean.txt` 和 `desi_gaussian_bao_ALL_GCcomb_cov.txt` 放在同一目录。
-*   **`dz_renorm_test.py`**用于检验“线性结构增长因子是否足以驱动重整化”的阴性测试脚本。
+*   **`dz_renorm_test.py`** - 用于检验“线性结构增长因子是否足以驱动重整化”的阴性测试脚本。
+*   **`dz_renorm_test_time.py`** - 用于检验“线性结构增长率+记忆核时间积分”能否复现 DR2 的 \(\delta(z)\) 廓线。结果为端元夹击失败，证明线性映射族无效。
 
 ### 6. 近场哈勃常数检验（附篇）
 
