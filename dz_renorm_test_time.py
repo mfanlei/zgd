@@ -139,3 +139,42 @@ for tau_fixed, label in [(0.01, "short kernel tau=0.01"),
         print(f"{label}: A={A_only:.5f}, delta(2.33)={d233*100:+.2f}%, delta(3.0)={d3*100:+.2f}%")
     except Exception as e:
         print(f"{label}: fit failed -> {e}")
+
+# ================= 集中核验证（核对 §5.9 加固句，修复版） =================
+
+def K_gauss(Delta, Delta0, sigma_k):
+    return np.exp(-(Delta - Delta0)**2 / (2 * sigma_k**2))
+
+def model_delta_concentrated_scalar(z, A, Delta0, sigma_k):
+    def integrand(zp):
+        rate = dDdt_scalar(zp)
+        Delta = t_age_scalar(z) - t_age_scalar(zp)
+        return rate * K_gauss(Delta, Delta0, sigma_k) / ((1+zp) * H_LCDM(zp))
+    integral, _ = quad(integrand, z, 20.0, limit=200)
+    return A * integral
+
+Delta0 = 4.8
+z_fit = np.linspace(0.01, 2.33, 30)
+delta_fit = delta_DPL(z_fit)
+
+print("\n固定 Δ_0 = 4.8 Gyr，单参数拟合 A：")
+print(f"{'σ_k(Gyr)':<10} {'A_fit':<12} {'δ(0.01)':<12} {'δ(0.93)':<12} {'δ(1.4)':<12} {'δ(2.33)':<12}")
+for sigma_k in [0.3, 0.5, 1.0, 2.0]:
+    def model_vec(z, A):
+        return model_delta_concentrated_scalar(z, A, Delta0, sigma_k)
+    model_vec_np = np.vectorize(model_vec)
+    try:
+        popt_A, _ = curve_fit(model_vec_np, z_fit, delta_fit, p0=[1.0], bounds=([-100], [100]))
+        A = popt_A[0]
+    except Exception as e:
+        print(f"  σ_k={sigma_k}: 拟合失败: {e}")
+        continue
+    d001 = model_delta_concentrated_scalar(0.01, A, Delta0, sigma_k)
+    d093 = model_delta_concentrated_scalar(0.93, A, Delta0, sigma_k)
+    d14  = model_delta_concentrated_scalar(1.4,  A, Delta0, sigma_k)
+    d233 = model_delta_concentrated_scalar(2.33, A, Delta0, sigma_k)
+    print(f"{sigma_k:<10.1f} {A:<12.4f} {d001*100:<+12.2f} {d093*100:<+12.2f} {d14*100:<+12.2f} {d233*100:<+12.2f}")
+
+print("\nDPL 廓线参考值：")
+for z in [0.01, 0.93, 1.4, 2.33]:
+    print(f"  z={z:.2f}: δ_DPL={delta_DPL(z)*100:+.2f}%")
