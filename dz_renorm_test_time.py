@@ -31,12 +31,10 @@ def H_LCDM(z):
 
 # 将 z 转为 t(z) 的标量函数
 def t_age_scalar(z):
-    # 积分从 z 到 100，避免无穷大
     val, _ = quad(lambda zp: 1.0 / ((1+zp) * H_LCDM(zp)), z, 100)
-    # 1/H0 的单位是 13.79 Gyr，Mpc/(km/s) 转换到 Gyr 大约是 978
-    return val * (1.0 / H0_bare) * 978.0
+    # [FIX ①] 去掉多余的 1/H0_bare；val 单位已是 Mpc/(km/s)
+    return val * 978.0
 
-# 包装为向量化函数
 t_age = np.vectorize(t_age_scalar)
 
 def D_z_scalar(z):
@@ -46,12 +44,12 @@ def D_z_scalar(z):
 D_z = np.vectorize(D_z_scalar)
 
 def dDdt_scalar(z):
-    # 计算 D(z) 对 t 的导数，即结构形成率
     dz = 1e-4
     D1 = D_z_scalar(z + dz)
     D2 = D_z_scalar(z - dz)
     dDdz = (D1 - D2) / (2 * dz)
-    dtdz = 1.0 / ((1 + z) * H_LCDM(z))
+    # [FIX ④] 真值 dt/dz = -1/((1+z)H)
+    dtdz = -1.0 / ((1 + z) * H_LCDM(z))
     return dDdz / dtdz
 
 dDdt = np.vectorize(dDdt_scalar)
@@ -59,14 +57,15 @@ dDdt = np.vectorize(dDdt_scalar)
 # ================= 积分模型 =================
 def model_delta_scalar(z, A, tau):
     def integrand(zp):
-        rate = dDdt_scalar(zp) # 用结构形成率驱动
-        dt = t_age_scalar(zp) - t_age_scalar(z)
-        # 如果时间太久远（dt很大），被exp抑制
-        return rate * np.exp(-dt / tau) / H_LCDM(zp)
+        rate = dDdt_scalar(zp)
+        # [FIX ②] 核方向：zp>z 时 Delta>0，exp(-Delta/tau) 衰减
+        Delta = t_age_scalar(z) - t_age_scalar(zp)
+        # [FIX ③] 补 1/(1+zp) 换元因子
+        return rate * np.exp(-Delta / tau) / ((1+zp) * H_LCDM(zp))
     
     integral, _ = quad(integrand, z, 20.0, limit=100)
-    # A 为负，因为形成过程产生阻力，delta>0
-    return -A * integral
+    # [FIX ④] dtdz 翻正后 dDdt 为正，负号不再需要
+    return A * integral
 
 model_delta = np.vectorize(model_delta_scalar)
 
@@ -75,7 +74,6 @@ z_data = np.linspace(0.01, 2.33, 50)
 delta_data = delta_DPL(z_data)
 
 # ================= 拟合 =================
-# A 限制为正数即可（内部加了负号），tau 为时间尺度（Gyr）
 popt, pcov = curve_fit(model_delta, z_data, delta_data, p0=[0.1, 5.0], bounds=([0.001, 0.1], [10, 50]))
 A_fit, tau_fit = popt
 
@@ -85,7 +83,6 @@ H_3_pred = H_bare(3.0) * (1 - delta_3_pred)
 DH_3_pred = c / H_3_pred
 DH_rd_3_pred = DH_3_pred / rd
 
-# DPL 自身的严格外推值
 H_3_dpl = H_DPL(3.0)
 DH_rd_3_dpl = (c / H_3_dpl) / rd
 
@@ -100,6 +97,17 @@ print(f"纯物理外推 D_H/rd(3.0) = {DH_rd_3_pred:.3f}")
 print(f"DPL 模型 D_H/rd(3.0)   = {DH_rd_3_dpl:.3f}")
 print("="*50)
 
+# ================= [新增] 端点输出，用于核对 20.7% / 5.3% 的出处 =================
+# tau->0 应对应"纯瞬时"(短核)；tau->inf 应对应"纯累积"(长核)
+for tau_test, label in [(0.01, "tau->0 (instantaneous)"), (1000.0, "tau->inf (cumulative)")]:
+    integ_val_233 = quad(
+        lambda zp: dDdt_scalar(zp) * np.exp(-(t_age_scalar(2.33)-t_age_scalar(zp))/tau_test) / ((1+zp)*H_LCDM(zp)),
+        2.33, 20.0, limit=100
+    )[0]
+    print(f"{label}: raw integral at z=2.33 = {integ_val_233:.6e}")
+    print(f"    (未乘 A；若要和论文 20.7%/5.3% 对比，需乘同一 A 并与 DPL 锚点 -0.1% 比)")
+print("="*50)
+
 # 画图
 z_plot = np.linspace(0.01, 3.0, 100)
 plt.plot(z_plot, delta_DPL(z_plot), 'b--', label='DPL Phenomenology')
@@ -107,7 +115,27 @@ plt.plot(z_plot, model_delta(z_plot, A_fit, tau_fit), 'r-', label=f'Integral Mod
 plt.axvline(2.33, color='k', linestyle=':', label='DR2 Limit')
 plt.axhline(0, color='gray', linestyle='-')
 plt.xlabel('Redshift z')
-plt.ylabel('Renormalization Factor \(\delta(z)\)')
+plt.ylabel(r'Renormalization Factor \(\delta(z)\)')
 plt.legend()
 plt.title('Time-Integrated Renormalization')
 plt.savefig('delta_time_integrated.png', dpi=200)
+
+# ================= [诊断] 固定 tau，单参数拟合 A，输出锚点预测 =================
+from scipy.optimize import curve_fit as cf
+
+z_diag = np.linspace(0.01, 2.33, 30)
+delta_diag = delta_DPL(z_diag)
+
+for tau_fixed, label in [(0.01, "short kernel tau=0.01"),
+                          (4.35, "intermediate tau=4.35"),
+                          (1000.0, "long kernel tau=1000")]:
+    model_fixed = lambda z, A: model_delta(z, A, tau_fixed)
+    try:
+        popt_A, _ = cf(model_fixed, z_diag, delta_diag,
+                       p0=[0.1], bounds=([0.0001], [100.0]))
+        A_only = popt_A[0]
+        d233 = model_delta(2.33, A_only, tau_fixed)
+        d3 = model_delta(3.0, A_only, tau_fixed)
+        print(f"{label}: A={A_only:.5f}, delta(2.33)={d233*100:+.2f}%, delta(3.0)={d3*100:+.2f}%")
+    except Exception as e:
+        print(f"{label}: fit failed -> {e}")
