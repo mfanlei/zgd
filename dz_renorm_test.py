@@ -28,8 +28,10 @@ def delta_DPL(z):
 Om = 0.315
 def D_z(z):
     """Carroll, Press & Turner 近似的线性结构增长因子"""
-    g_z = Om / (Om + (1-Om)/(1+z)**3)
-    return (g_z ** (-0.23)) * (1+z)**(-1) * (1/1.0) # z=0 归一化为 1
+    Om_z = Om / (Om + (1-Om)/(1+z)**3)
+    OL_z = 1 - Om_z
+    g = 2.5*Om_z / (Om_z**(4/7) - OL_z + (1+Om_z/2)*(1+OL_z/70))
+    return g * (1+z)**(-1)
 
 # ================= 数据准备 (DR2 窗口) =================
 z_data = np.linspace(0.01, 2.33, 100)
