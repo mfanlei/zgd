@@ -38,8 +38,10 @@ def t_age_scalar(z):
 t_age = np.vectorize(t_age_scalar)
 
 def D_z_scalar(z):
-    g_z = Om / (Om + (1-Om)/(1+z)**3)
-    return (g_z ** (-0.23)) * (1+z)**(-1) * (1/1.0)
+    Om_z = Om / (Om + (1-Om)/(1+z)**3)
+    OL_z = 1 - Om_z
+    g = 2.5*Om_z / (Om_z**(4/7) - OL_z + (1+Om_z/2)*(1+OL_z/70))
+    return g * (1+z)**(-1)
 
 D_z = np.vectorize(D_z_scalar)
 
