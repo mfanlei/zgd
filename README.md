@@ -29,6 +29,7 @@
     *   **注意**：需与官方数据文件 `desi_gaussian_bao_ALL_GCcomb_mean.txt` 和 `desi_gaussian_bao_ALL_GCcomb_cov.txt` 放在同一目录。
 *   **`dz_renorm_test.py`** - 用于检验“线性结构增长因子是否足以驱动重整化”的阴性测试脚本。
 *   **`dz_renorm_test_time.py`** - 用于检验“线性结构增长率+记忆核时间积分”能否复现 DR2 的 \(\delta(z)\) 廓线。结果为端元夹击失败，证明线性映射族无效。
+*   **`appendix_D_madau_fit.py`** - 该脚本实现了 ZGD 理论中“引力井图景”下的一维视线累积唯象模型，并利用 DESI DR2 BAO 数据以及 Herrera-Alcantar 等人（2026）的多红移 Ly\(\alpha\) 数据对该模型进行参数拟合。
 
 ### 6. 近场哈勃常数检验（附篇）
 
